@@ -1,0 +1,53 @@
+#!/usr/bin/python
+
+import sys
+import getopt
+from sense_emu import SenseHat
+
+sense = SenseHat()
+
+t_value = '';
+p_value = '';
+h_value = '';
+
+sysarg = sys.argv[1:];
+
+try:
+    opts,args = getopt.getopt(sysarg, ':t:p:h:')
+except getopt.GetoptError as err:
+            print(err)
+            sys.exit(1)
+            
+for opt, arg in opts:
+    if opt in '-t':
+        t_value = arg
+    elif opt in '-p':
+        p_value = arg
+    elif opt in '-h':
+        h_value = arg
+        
+if (t_value == 'C')or(t_value == 'c'):
+    temp = sense.get_temperature()
+    print("Temperatura: %s C" %temp)
+elif (t_value == 'F')or(t_value == 'f'):
+    temp = sense.get_temperature()
+    temp = ((temp/5)*9)+32
+    print("Temperatura: %d F" %temp)
+    
+if (p_value == 'P')or(p_value == 'p'):
+    press = sense.get_pressure()
+    print("Cisnienie: %s hPa" %press)
+elif (p_value == 'H')or(p_value == 'h'):
+    press = sense.get_pressure()   
+    press = press*0.75
+    print("Cisnienie: %d mmHg" %press)
+    
+if (h_value == 'P')or(h_value == 'p'):
+    humi = sense.get_humidity()
+    print("Wilgotnosc: %s %%" %humi)
+elif (h_value == 'l')or(h_value == 'L'):
+    humi = sense.get_humidity()   
+    if humi > 0:
+        print("Wilgotnosc: 1")
+    elif humi == 0:
+        print("Wilgotnosc: 0")
